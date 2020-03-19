@@ -1,0 +1,5 @@
+
+
+IR1 - Data collected with small gripper on a medium ovoid using HML config with 3 IR sensors HML is original
+
+IR2 - Data collected with small gripper on a medium ovoid using HML config with 3 IR sensors HML is original.  Data is ranked.

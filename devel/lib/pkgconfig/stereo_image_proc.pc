@@ -1,0 +1,8 @@
+prefix=/home/ben/gripper_proj_py/devel
+
+Name: stereo_image_proc
+Description: Description of stereo_image_proc
+Version: 1.13.0
+Cflags: -I/home/ben/gripper_proj_py/devel/include -I/home/ben/gripper_proj_py/src/drivers/camera_calibration/image_pipeline/stereo_image_proc/include
+Libs: -L/home/ben/gripper_proj_py/devel/lib -lstereo_image_proc
+Requires: image_geometry image_proc sensor_msgs stereo_msgs

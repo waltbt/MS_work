@@ -1,0 +1,2 @@
+drivers/ur3_driver:gt_py
+-DCATKIN_DEVEL_PREFIX=/home/ben/gripper_proj_py/devel -DCMAKE_INSTALL_PREFIX=/home/ben/gripper_proj_py/install -G Unix Makefiles

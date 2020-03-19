@@ -1,0 +1,181 @@
+def file_menu():
+    while(1):
+        print("0: Exit Menu")
+        print("1: Basic Gripper")
+        print("2: Tabbed Gripper")
+        gripper_type_raw = raw_input("Gripper Type: ")
+        if(int(gripper_type_raw) == 1):
+            print("Basic Gripper")
+            gripper_type = "Basic"
+            break
+        elif (int(gripper_type_raw) == 2):
+            print("Tabbed Gripper")
+            gripper_type = "Tabbed"
+            break
+        elif (int(gripper_type_raw) == 0):
+            print("Exiting...")
+            return 0 #??? Is this right?
+        else:
+            print("Please just enter the character 0 1 or 2 \n\n")
+
+    while(1):
+        print("0: Exit Menu")
+        print("1: Ovoid - Small")
+        print("2: Ovoid - Medium")
+        print("3: Ovoid - Large")
+        print("4: Sphere - Small")
+        print("5: Sphere - Medium")
+        print("6: Sphere - Large")
+        berry_type_raw = raw_input("Berry Type: ")
+        if(int(berry_type_raw) == 1):
+            print("Ovoid - Small")
+            berry_type = "Ovoid_Small"
+            break
+        elif (int(berry_type_raw) == 2):
+            print("Ovoid - Medium")
+            berry_type = "Ovoid_Medium"
+            break
+        elif (int(berry_type_raw) == 3):
+            print("Ovoid - Large")
+            berry_type = "Ovoid_Large"
+            break
+        elif (int(berry_type_raw) == 4):
+            print("Sphere - Small")
+            berry_type = "Sphere_Small"
+            break
+        elif (int(berry_type_raw) == 5):
+            print("Sphere - Medium")
+            berry_type = "Sphere_Medium"
+            break
+        elif (int(berry_type_raw) == 6):
+            print("Sphere - Large")
+            berry_type = "Sphere_Large"
+            break
+        elif (int(berry_type_raw) == 0):
+            print("Exiting...")
+            return 0 #??? Is this right?
+        else:
+            print("Please just enter the character 0 - 6 \n\n")
+    filename = gripper_type + "_" + berry_type
+
+    return filename
+
+
+
+    def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, loop_rate, filename):
+        global test_pt_list
+        global button_data
+        global sensor_TOF_reading
+        global sensor_IR_reading
+        global sensor_color_reading
+        global TOF_sensor
+
+        data_collected = []
+        vel = 4.0
+        accel = 4.0
+        #print(test_pt_list)
+        tracker = 0
+        for pt in test_pt_list:
+            print("Moving to ", pt)
+            x_d = pt[0] + test_home[0]
+            y_d = pt[1] + test_home[1]
+            z_d = pt[2] + test_home[2]
+            z_over = z_d + 0.05
+
+            theta_d_over = lab_invk(x_d, y_d, z_over, 90)
+            move_arm(pub_cmd, loop_rate, theta_d_over, vel, accel)
+            theta_d = lab_invk(x_d, y_d, z_d, 90)
+            move_arm(pub_cmd, loop_rate, theta_d, vel, accel)
+
+            #Perform tests
+            if(TOF_sensor == True):
+                # Preclose data
+                sen_TOF_cmd.publish()
+                # Fix
+                while sensor_TOF_reading[0] == -1:
+                    pass
+                while sensor_TOF_reading[1] == -1:
+                    pass
+                presensor = list(sensor_TOF_reading)
+                sensor_TOF_reading = [-1, -1, -1, -1.0, -1.0, -1.0]
+                #print(presensor)
+                # close gripper
+                grp_cmd.publish(True)
+                # Gather sensor data
+                sen_TOF_cmd.publish()
+                # Fix
+                while sensor_TOF_reading[0] == -1:
+                    pass
+                while sensor_TOF_reading[1] == -1:
+                    pass
+                rospy.sleep(0.5)
+                # Ask for input
+                close_sensor = list(sensor_TOF_reading)
+                #print(close_sensor)
+                print(tracker)
+                tracker += 1
+                print("Status of the grip: good (green), bad (red) or end test (yellow)")
+                while button_data == -1:
+                    pass
+                #print(presensor)
+                #print(close_sensor)
+                data_collected.append(pt + presensor + close_sensor + [button_data])
+                button_data = -1
+                sensor_TOF_reading = [-1, -1, -1, -1.0, -1.0, -1.0]
+            else:
+                # Preclose data
+                sen_IR_cmd.publish()
+                while sensor_IR_reading[0] == -1:
+                    pass
+                presensor_IR = list(sensor_IR_reading)
+                sensor_IR_reading = [-1, -1, -1]
+
+                presensor_color =[]
+                if color_sensor == True:
+
+                    sen_color_cmd.publish()
+                    while sensor_color_reading[0] == -1:
+                        pass
+                    presensor_color = list(sensor_color_reading)
+
+                    sensor_color_reading = [-1, -1, -1, -1, -1, -1.0]
+                #print(presensor)
+                # close gripper
+                grp_cmd.publish(True)
+                # Gather sensor data
+                sen_IR_cmd.publish()
+                while sensor_IR_reading[0] == -1:
+                    pass
+                rospy.sleep(0.5)
+                # Ask for input
+                close_sensor_IR = list(sensor_IR_reading)
+
+                close_sensor_color =[]
+                if color_sensor == True:
+
+                    sen_color_cmd.publish()
+                    while sensor_color_reading[0] == -1:
+                        pass
+                    close_sensor_color = list(sensor_color_reading)
+
+                    sensor_color_reading = [-1, -1, -1, -1, -1, -1.0]
+                #print(close_sensor)
+                print(tracker)
+                tracker += 1
+                print("Status of the grip: good (green), bad (red) or end test (yellow)")
+                while button_data == -1:
+                    pass
+                #print(presensor)
+                #print(close_sensor)
+                data_collected.append(pt + presensor_IR + close_sensor_IR + presensor_color + close_sensor_color + [button_data])
+                button_data = -1
+                sensor_IR_reading = [-1, -1, -1]
+            # open gripper
+            grp_cmd.publish(False)
+
+            # Move over
+            theta_d_over = lab_invk(x_d, y_d, z_over, 90)
+            move_arm(pub_cmd, loop_rate, theta_d_over, vel, accel)
+
+        with open('data/' + filename + '_data.txt', 'w') as filehandle:
+            json.dump(data_collected, filehandle)

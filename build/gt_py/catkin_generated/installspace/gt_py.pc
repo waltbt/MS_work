@@ -1,0 +1,8 @@
+prefix=/home/ben/gripper_proj_py/install
+
+Name: gt_py
+Description: Description of gt_py
+Version: 0.1.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs ur3_driver message_runtime

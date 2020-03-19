@@ -1,0 +1,72 @@
+# os.chdir('/home/ben/gripper_proj_py/data/Old_data/')
+os.chdir('/home/ben/gripper_proj_py/data/IR_data/')
+# filename = 'Basic_Ovoid_Medium_data_1_8_set_1.txt'
+#
+# with open(filename, 'r') as filehandle:
+#     data_set_t1 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_8_set_2.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t2 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_8_set_3.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t3 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_8_set_4.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t4 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_8_set_5.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t5 = json.load(filehandle)
+#
+# data_set = data_set_t1 + data_set_t2 + data_set_t3 + data_set_t4 + data_set_t5
+
+# filename = 'Basic_Ovoid_Medium_data_1_15_set_1.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t1 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_15_set_2.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t2 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_15_set_3.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t3 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_15_set_4.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t4 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_15_set_5.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t5 = json.load(filehandle)
+#
+# filename = 'Basic_Ovoid_Medium_data_1_15_set_6.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t6 = json.load(filehandle)
+
+filename = 'Tabbed_Sphere_Large_data_1_19_set_1.txt'
+with open(filename, 'r') as filehandle:
+    data_set_t1 = json.load(filehandle)
+
+filename = 'Tabbed_Sphere_Large_data_1_19_set_2.txt'
+with open(filename, 'r') as filehandle:
+    data_set_t2 = json.load(filehandle)
+
+filename = 'Tabbed_Sphere_Large_data_1_19_set_3.txt'
+with open(filename, 'r') as filehandle:
+    data_set_t3 = json.load(filehandle)
+
+filename = 'Tabbed_Sphere_Large_data_1_19_set_4.txt'
+with open(filename, 'r') as filehandle:
+    data_set_t4 = json.load(filehandle)
+#
+# filename = 'Tabbed_Sphere_Large_data_1_15_set_5.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t5 = json.load(filehandle)
+#
+# filename = 'Tabbed_Sphere_Large_data_1_15_set_6.txt'
+# with open(filename, 'r') as filehandle:
+#     data_set_t6 = json.load(filehandle)
