@@ -43,9 +43,9 @@ sensor_color_reading = [-1, -1, -1, -1, -1, -1.0] # Sensor color reading from ar
 
 OFF_LINE = True
 
-IR_sesor = True
-TOF_sensor = True
-color_sensor = True
+IR_sensor = False
+TOF_sensor = False
+color_sensor = False
 
 
 thetas = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -135,7 +135,7 @@ def sensor_color_callback(msg):
     sensor_color_reading[0] = msg.rgb_values[0]
     sensor_color_reading[1] = msg.rgb_values[1]
     sensor_color_reading[2] = msg.rgb_values[2]
-    sensor_color_reading[3] = msg.rgb_values[0]
+    sensor_color_reading[3] = msg.rgb_values[3]
     sensor_color_reading[4] = msg.color_temp
     sensor_color_reading[5] = msg.lux
 
@@ -214,12 +214,14 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
     global sensor_IR_reading
     global sensor_color_reading
     global TOF_sensor
+    global IR_sensor
+    global color_sensor
 
     data_collected = []
     vel = 4.0
     accel = 4.0
     #print(test_pt_list)
-    tracker = 0
+    tracker = 1
     for pt in test_pt_list:
         print("Moving to ", pt)
         x_d = pt[0] + test_home[0]
@@ -244,7 +246,7 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
             presensor_TOF = read_TOF_sensor(sen_TOF_cmd)
         if(IR_sensor == True):
             presensor_IR = read_IR_sensor(sen_IR_cmd)
-        if(Color_sensor == True):
+        if(color_sensor == True):
             presensor_color = read_color_sensor(sen_color_cmd)
         # Close gripper
         grp_cmd.publish(True)
@@ -254,8 +256,8 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
             close_sensor_TOF = read_TOF_sensor(sen_TOF_cmd)
         if(IR_sensor == True):
             close_sensor_IR = read_IR_sensor(sen_IR_cmd)
-        if(Color_sensor == True):
-            presensor_color = read_color_sensor(sen_color_cmd)
+        if(color_sensor == True):
+            close_sensor_color = read_color_sensor(sen_color_cmd)
 
         # Gather button data
         print(tracker)
@@ -265,8 +267,8 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
             pass
         #print(presensor)
         #print(close_sensor)
-        #data_collected.append(pt + presensor_IR + close_sensor_IR + presensor_color + close_sensor_color + presensor_color + close_sensor_color + [button_data])
-        data_collected.append(sensor_data_struct(pt, presensor_IR + close_sensor_IR, presensor_TOF + close_sensor_TOF, presensor_color + close_sensor_color, button_data))
+        data_collected.append(pt + presensor_IR + close_sensor_IR + presensor_TOF + close_sensor_TOF + presensor_color + close_sensor_color + [button_data])
+        #data_collected.append(sensor_data_struct(pt, presensor_IR + close_sensor_IR, presensor_TOF + close_sensor_TOF, presensor_color + close_sensor_color, button_data))
         button_data = -1
 
         # open gripper
@@ -281,6 +283,10 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
 
 
 def file_menu():
+    global TOF_sensor
+    global IR_sensor
+    global color_sensor
+
     while(1):
         print("0: Exit Menu")
         print("1: IR")
@@ -292,22 +298,37 @@ def file_menu():
         if(int(sensor_type_raw) == 1):
             print("IR")
             sensor_type = "IR"
+            TOF_sensor = False
+            color_sensor = False
+            IR_sensor = True
             break
         if(int(sensor_type_raw) == 2):
             print("TOF")
             sensor_type = "TOF"
+            TOF_sensor = True
+            color_sensor = False
+            IR_sensor = False
             break
         if(int(sensor_type_raw) == 3):
             print("IR + Color")
             sensor_type = "IR_Color"
+            TOF_sensor = False
+            color_sensor = True
+            IR_sensor = True
             break
         if(int(sensor_type_raw) == 4):
             print("TOF + Color")
             sensor_type = "TOF_Color"
+            color_sensor = True
+            TOF_sensor = True
+            IR_sensor = False
             break
         if(int(sensor_type_raw) == 5):
             print("IR + TOF + Color")
             sensor_type = "IR_TOF_Color"
+            color_sensor = True
+            TOF_sensor = True
+            IR_sensor = True
             break
         elif (int(sensor_type_raw) == 0):
             print("Exiting...")
@@ -351,10 +372,11 @@ def read_TOF_sensor(sen_cmd):
     sen_cmd.publish()
     while sensor_TOF_reading[0] == -1:
         pass
-    while sensor_TOF_reading[1] == -1:
-        pass
+    #while sensor_TOF_reading[1] == -1:
+        #pass
     data = copy.copy(sensor_TOF_reading)
     sensor_TOF_reading = [-1, -1, -1, -1.0, -1.0, -1.0]
+    print("TOF Read")
     return data
 
 def read_IR_sensor(sen_cmd):
@@ -367,6 +389,7 @@ def read_IR_sensor(sen_cmd):
         pass
     data = copy.copy(sensor_IR_reading)
     sensor_IR_reading = [-1, -1, -1]
+    print("IR Read")
     return data
 
 
@@ -378,6 +401,7 @@ def read_color_sensor(sen_cmd):
         pass
     data = copy.copy(sensor_color_reading)
     sensor_color_reading = [-1, -1, -1, -1, -1, -1.0]
+    print("Color Read")
     return data
 
 """
@@ -407,7 +431,7 @@ def leaf_test(sen_IR_cmd, sen_TOF_cmd, sen_color_cmd):
             sensor_TOF = read_TOF_sensor(sen_TOF_cmd)
         if(IR_sensor == True):
             sensor_IR = read_IR_sensor(sen_IR_cmd)
-        if(Color_sensor == True):
+        if(color_sensor == True):
             sensor_color = read_color_sensor(sen_color_cmd)
 
         rospy.sleep(0.5)
