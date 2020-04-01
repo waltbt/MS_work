@@ -18,6 +18,8 @@ import random
 import os
 from sklearn.neighbors import KNeighborsClassifier
 
+import pickle
+
 # 20Hz
 SPIN_RATE = 20
 
@@ -267,8 +269,8 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
             pass
         #print(presensor)
         #print(close_sensor)
-        data_collected.append(pt + presensor_IR + close_sensor_IR + presensor_TOF + close_sensor_TOF + presensor_color + close_sensor_color + [button_data])
-        #data_collected.append(sensor_data_struct(pt, presensor_IR + close_sensor_IR, presensor_TOF + close_sensor_TOF, presensor_color + close_sensor_color, button_data))
+        #data_collected.append(pt + presensor_IR + close_sensor_IR + presensor_TOF + close_sensor_TOF + presensor_color + close_sensor_color + [button_data])
+        data_collected.append(sensor_data_struct(pt, presensor_IR + close_sensor_IR, presensor_TOF + close_sensor_TOF, presensor_color + close_sensor_color, button_data))
         button_data = -1
 
         # open gripper
@@ -279,7 +281,8 @@ def cycle_testpoints(pub_cmd, sen_IR_cmd, sen_TOF_cmd, sen_color_cmd, grp_cmd, l
         move_arm(pub_cmd, loop_rate, theta_d_over, vel, accel)
 
     with open('data/' + filename + '_data.txt', 'w') as filehandle:
-        json.dump(data_collected, filehandle)
+        #json.dump(data_collected, filehandle)
+        pickle.dump(data_collected, filehandle)
 
 
 def file_menu():
@@ -414,7 +417,6 @@ def leaf_test(sen_IR_cmd, sen_TOF_cmd, sen_color_cmd):
     data_collected = []
     # Create a file name
     filename = file_menu()
-
     # Read number of cycles
     num_cycles = raw_input("How many cycles?")
     for a in range(int(num_cycles)):
@@ -439,12 +441,15 @@ def leaf_test(sen_IR_cmd, sen_TOF_cmd, sen_color_cmd):
         print(tracker)
         tracker += 1
         # data_collected.append(sensor)
+        #data_collected.append(sensor_data_struct(pt, sensor_IR, sensor_TOF, sensor_color, "leaf"))
         data_collected.append(sensor_data_struct(pt, sensor_IR, sensor_TOF, sensor_color, "leaf"))
+
 
         button_data = -1
 
     with open('data/' + filename + '_leaf.txt', 'w') as filehandle:
-        json.dump(data_collected, filehandle)
+        #json.dump(data_collected, filehandle)
+        pickle.dump(data_collected, filehandle)
 
 def prediction_test(sen_IR_cmd):
     global button_data
